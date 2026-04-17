@@ -2,7 +2,7 @@ from bybit_api import *
 from indicator import *
 from discord_bot import send_message
 from datetime import datetime
-
+import time
 
 def calculate_oi_change(oi_list):
     if len(oi_list) < 2:
@@ -25,6 +25,7 @@ def analyze():
     signals = []
 
     for t in tickers:
+        time.sleep(0.3)
         try:
             symbol = t["symbol"]
 
@@ -36,9 +37,13 @@ def analyze():
                 continue
 
             kline = get_kline(symbol)
+            if not kline or len(kline) < 20:
+                continue
             indicators = get_indicators(kline)
 
             oi_data = get_open_interest(symbol)
+            if not oi_data or len(oi_data) < 2:
+                continue
             oi_change = calculate_oi_change(oi_data)
 
             score = 0
