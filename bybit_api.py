@@ -1,17 +1,33 @@
 import requests
 
-BASE = "https://api.bybit.com"
+BASE_URL = "https://api.bybit.com"
+
 
 def get_tickers():
-    url = f"{BASE}/v5/market/tickers?category=linear"
-    return requests.get(url).json()["result"]["list"]
+    url = f"{BASE_URL}/v5/market/tickers?category=linear"
+    res = requests.get(url, timeout=10)
+    return res.json()["result"]["list"]
 
-def get_oi(symbol):
-    url = f"{BASE}/v5/market/open-interest?category=linear&symbol={symbol}&interval=5min"
-    data = requests.get(url).json()
-    return data["result"]["list"]
 
-def get_kline(symbol):
-    url = f"{BASE}/v5/market/kline?category=linear&symbol={symbol}&interval=240&limit=50"
-    data = requests.get(url).json()
-    return data["result"]["list"]
+def get_kline(symbol, limit=50):
+    url = f"{BASE_URL}/v5/market/kline"
+    params = {
+        "category": "linear",
+        "symbol": symbol,
+        "interval": "240",
+        "limit": limit
+    }
+    res = requests.get(url, params=params, timeout=10)
+    return res.json()["result"]["list"]
+
+
+def get_open_interest(symbol):
+    url = f"{BASE_URL}/v5/market/open-interest"
+    params = {
+        "category": "linear",
+        "symbol": symbol,
+        "interval": "5min",
+        "limit": 50
+    }
+    res = requests.get(url, params=params, timeout=10)
+    return res.json()["result"]["list"]
