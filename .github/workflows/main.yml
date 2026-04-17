@@ -1,0 +1,36 @@
+# 您可以在此处添加更详细的GitHub Actions配置
+# 示例：自动部署脚本、构建测试等
+
+name: Deploy and Run Bybit Signal Trigger
+
+on:
+  # 每4小时触发一次
+  schedule:
+    - cron: '0 */4 * * *'
+
+  # 可选：通过Webhook或手动触发
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 克隆仓库
+      - uses: actions/checkout@v4
+      
+      # 2. 设置Python环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # 4. 运行脚本
+      - name: Run Bybit Signal Trigger
+        run: |
+          python main.py
